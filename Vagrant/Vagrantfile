@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # config.vm.box = "generic/ubuntu2204"
+  config.vm.box = "hashicorp/bionic64"
+  config.vm.network "private_network", ip: "10.0.10.101"
+  config.vm.network "forwarded_port", guest: 80, host: 8081 #localhost
+  config.vm.network "forwarded_port", guest: 22, host: 2222 #sh
+  config.vm.network "forwarded_port", guest: 8080, host: 1234 #alternative port
+  config.vm.network "forwarded_port", guest: 8000, host: 1256 #alternative port
+  config.vm.network "forwarded_port", guest: 3306, host: 1260 #mysql
+  config.vm.hostname = "bootcamp"
+  config.vm.synced_folder ".", "/syncd", disabled: false
+  config.vm.disk :disk, size: "50GB", primary: true
+  config.vm.provider "virtualbox" do |vb|
+     vb.memory = "2048"
+     vb.cpus = "2"
+     vb.name = "vagrantPC"#nombre
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+      echo "-------------------- Updating package lists"
+      sudo apt-get update -y
+      echo "-------------------- Installing Git"
+      sudo apt install -y git
+      echo "-------------------- Installing Ansible"
+      sudo apt-get update -y
+      sudo apt install -y git curl wget
+      sudo apt install ansible
+      echo "-------------------- Installing Terraform"
+      sudo apt-get update -y
+      sudo apt install -y gnupg software-properties-common curl
+      wget -O- XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d
+      sudo apt update -y
+      sudo apt install terraform
+      echo "-------------------- Installing Vim"
+      sudo apt-get update -y
+      sudo apt-get install -y vim
+      echo "-------------------- Installing Apache"
+      sudo apt-get update -y
+      sudo apt-get install -y apache2
+      echo "-------------------- Installing MySQL"
+      sudo apt-get update -y
+      sudo apt-get install -y mysql-server
+      echo "-------------------- Installing PHP"
+      sudo apt-get update -y
+      sudo apt-get install -y php libapache2-mod-php php-mysql
+      echo "-------------------- Installing NodeJS"
+      sudo apt-get update -y
+      sudo apt-get install -y nodejs
+  SHELL
+end

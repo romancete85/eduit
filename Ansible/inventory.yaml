@@ -1,0 +1,5 @@
+all:
+  hosts:
+    instancia_ec2:
+      ansible_host: 34.224.26.10
+
