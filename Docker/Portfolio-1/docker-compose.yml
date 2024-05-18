@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./sites:/etc/nginx/sites-enabled
+    ports:
+      - "80:80"
+
+
+  web1:
+    image: myportfolio-latest
+
+  web2:
+    image: myportfolio-latest
+
+
