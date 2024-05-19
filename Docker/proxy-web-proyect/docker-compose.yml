@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  nginx-server:
+    build: ./nginx-server
+    container_name: nginx-server
+
+  apache-server:
+    build: ./apache-server
+    container_name: apache-server
+
+  reverse-proxy:
+    build: ./reverse-proxy
+    ports:
+      - "80:80"
+    depends_on:
+      - nginx-server
+      - apache-server
+    container_name: reverse-proxy
