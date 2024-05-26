@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nginx_test:
+    image: romanfandrich/alien-tetris
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.romanfandrich/alien-tetris.rule=Host(`test.sysdevops.cloudns.be`)"
+      - "traefik.http.routers.romanfandrich/alien-tetris.entrypoints=websecure"
+      - "traefik.http.routers.romanfandrich/alien-tetris.tls=true"
+      - "traefik.http.routers.romanfandrich/alien-tetris.tls.certresolver=myresolver"
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true

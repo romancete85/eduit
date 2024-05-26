@@ -1,0 +1,30 @@
+version: '3'
+services:
+  reverse-proxy:
+    image: docker.io/library/traefik:v3.0.1
+    #image: traefik:v2.11
+    command: --configFile=/etc/traefik/traefik.yml
+    ports:
+      - "80:80"
+      - "443:443"
+       # -- (Optional) Enable Dashboard, don't do in production
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - ./acme.json:/acme.json
+    # -- (Optional) When using Cloudflare as Cert Resolver
+    # environment:
+    #   - CF_DNS_API_TOKEN=your-cloudflare-api-token
+
+    # -- (Optional) When using a custom network
+    networks:
+      - traefik
+      
+# -- (Optional) When using a custom network
+# networks:
+#   your-traefik-network:
+#     external: true
+networks:
+  traefik:
+    external: true
