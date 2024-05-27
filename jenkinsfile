@@ -8,7 +8,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clonar el repositorio
-                git url: 'https://github.com/tuusuario/tu-repositorio.git', branch: 'main'
+                git url: 'https://github.com/romancete85/eduit.git', branch: 'main'
             }
         }
         stage('Linting') {
@@ -31,9 +31,9 @@ pipeline {
             steps {
                 script {
                     // Detener y eliminar cualquier contenedor en ejecución con el mismo nombre
-                    bat 'docker stop my-container || true && docker rm my-container || true'
+                    bat 'docker stop romanfandrich/alien-tetris || true && docker rm my-container || true'
                     // Ejecutar el contenedor
-                    bat 'docker run -d --name my-container %DOCKERHUB_REPO%:%BUILD_NUMBER%'
+                    bat 'docker run -d --tetris romanfandrich/alien-tetris %DOCKERHUB_REPO%:%BUILD_NUMBER%'
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     // Ejecutar pruebas básicas
-                    bat 'docker exec my-container cmd /c "echo Pruebas ejecutadas exitosamente"'
+                    bat 'docker exec romanfandrich/alien-tetris cmd /c "echo Pruebas ejecutadas exitosamente"'
                 }
             }
         }
@@ -59,7 +59,7 @@ pipeline {
         always {
             script {
                 // Limpiar contenedor después de la ejecución
-                bat 'docker stop my-container || true && docker rm my-container || true'
+                bat 'docker stop romanfandrich/alien-tetris || true && docker rm romanfandrich/alien-tetris || true'
             }
         }
     }
