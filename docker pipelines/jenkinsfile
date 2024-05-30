@@ -1,0 +1,43 @@
+pipeline {
+    environment {
+        registry = "romanfandrich/alien-tetris"
+        registryCredential = 'dockerD'
+        dockerImage = ''
+    }
+agent any
+    stages {
+        stage('Clone git') {
+            steps {
+                // Clonar el repositorio
+                git url: 'https://github.com/romancete85/eduit.git', branch: 'Jenkins'
+            }
+        }
+        stage('BUILD Image') {
+            steps {
+                script {
+                    // Construir la imagen Docker
+                    dockerImage = docker.build registry + ":${BUILD_NUMBER}"
+                    //bat 'docker build -t %DOCKERHUB_REPO%:%BUILD_NUMBER% .'
+                }
+            }
+        }
+        stage('Deploy image') {
+            steps {
+                script {
+                    docker.withRegistry('', registryCredential ) {
+                        dockerImage.push()
+                    // Ejecutar pruebas básicas
+                    //bat 'docker exec romanfandrich/alien-tetris cmd /c "echo Pruebas ejecutadas exitosamente"'
+                    }
+                }
+            }
+        }
+        stage('Run Container') {
+            steps {
+                script {
+                    bat "docker rmi $registry:${BUILD_NUMBER}"
+                }
+            }
+        }
+    }
+}
