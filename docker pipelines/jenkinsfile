@@ -1,43 +1,67 @@
 pipeline {
+    agent any
     environment {
-        registry = "romanfandrich/alien-tetris"
-        registryCredential = 'dockerD'
-        dockerImage = ''
+        DOCKERHUB_CREDENTIALS = credentials('docker')
+        DOCKERHUB_REPO = 'romanfandrich/tu-repositorio'
     }
-agent any
     stages {
-        stage('Clone git') {
+        stage('Checkout') {
             steps {
                 // Clonar el repositorio
-                git url: 'https://github.com/romancete85/eduit.git', branch: 'Jenkins'
+                git url: 'https://github.com/romancete85/eduit.git', branch: 'main'
             }
         }
-        stage('BUILD Image') {
+        stage('Linting') {
             steps {
                 script {
-                    // Construir la imagen Docker
-                    dockerImage = docker.build registry + ":${BUILD_NUMBER}"
-                    //bat 'docker build -t %DOCKERHUB_REPO%:%BUILD_NUMBER% .'
+                    // Ejecutar Hadolint para verificar el Dockerfile
+                    bat 'docker run --rm -i hadolint/hadolint < Dockerfile'
                 }
             }
         }
-        stage('Deploy image') {
+        stage('Build Image') {
             steps {
                 script {
-                    docker.withRegistry('', registryCredential ) {
-                        dockerImage.push()
-                    // Ejecutar pruebas básicas
-                    //bat 'docker exec romanfandrich/alien-tetris cmd /c "echo Pruebas ejecutadas exitosamente"'
-                    }
+                    // Construir la imagen Docker
+                    bat 'docker build -t %DOCKERHUB_REPO%:%BUILD_NUMBER% .'
                 }
             }
         }
         stage('Run Container') {
             steps {
                 script {
-                    bat "docker rmi $registry:${BUILD_NUMBER}"
+                    // Detener y eliminar cualquier contenedor en ejecución con el mismo nombre
+                    bat 'docker stop romanfandrich/alien-tetris || true && docker rm my-container || true'
+                    // Ejecutar el contenedor
+                    bat 'docker run -d --tetris romanfandrich/alien-tetris %DOCKERHUB_REPO%:%BUILD_NUMBER%'
+                }
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Ejecutar pruebas básicas
+                    bat 'docker exec romanfandrich/alien-tetris cmd /c "echo Pruebas ejecutadas exitosamente"'
+                }
+            }
+        }
+        stage('Push to DockerHub') {
+            steps {
+                script {
+                    // Iniciar sesión en DockerHub y subir la imagen
+                    bat "echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin"
+                    bat "docker push %DOCKERHUB_REPO%:%BUILD_NUMBER%"
                 }
             }
         }
     }
+    post {
+        always {
+            script {
+                // Limpiar contenedor después de la ejecución
+                bat 'docker stop romanfandrich/alien-tetris || true && docker rm romanfandrich/alien-tetris || true'
+            }
+        }
+    }
 }
+
