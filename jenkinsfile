@@ -1,4 +1,78 @@
 pipeline {
+    environment {
+        registry = "romanfandrich/alien-tetris"
+        registryCredential = 'dockerD'
+        dockerImage = ''
+    }
+    agent any
+    stages {
+        stage('Clone git') {
+            steps {
+                // Clonar el repositorio
+                git url: 'https://github.com/romancete85/eduit.git', branch: 'Jenkins'
+            }
+        }
+        stage('Hadolint') {
+            steps {
+                script {
+                    // Use Docker to run Hadolint
+                    def hadolintStatus = bat(returnStatus: true, script: 'docker run --rm -i hadolint/hadolint < Dockerfile')
+                    if (hadolintStatus != 0) {
+                        echo "Hadolint found issues with the Dockerfile"
+                    }
+                }
+            }
+        }
+        stage('BUILD Image') {
+            steps {
+                script {
+                    // Construir la imagen Docker
+                    dockerImage = docker.build registry + ":${BUILD_NUMBER}"
+                }
+            }
+        }
+        stage('Deploy image') {
+            steps {
+                script {
+                    docker.withRegistry('', registryCredential) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Run Container') {
+            steps {
+                script {
+                    bat "docker run -d --name alien-tetris-test -p 8055:80 ${registry}:${BUILD_NUMBER}"
+                    //bat "docker run -d --name alien-tetris-test ${registry}:${BUILD_NUMBER}"
+                }
+            }
+        }
+        stage('App Test') {
+            steps {
+                script {
+                    // Add application-specific tests here
+                    bat 'curl http://localhost:8055'
+                    // Stop and remove the container after tests
+                    bat 'docker stop alien-tetris-test'
+                    bat 'docker rm alien-tetris-test'
+                }
+            }
+        }
+        stage('Cleanup') {
+            steps {
+                script {
+                    bat "docker rmi ${registry}:${BUILD_NUMBER}"
+                }
+            }
+        }
+    }
+}
+
+
+-----------------------
+
+pipeline {
     agent any
     environment {
         DOCKERHUB_CREDENTIALS = credentials('docker')
