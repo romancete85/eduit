@@ -1,0 +1,62 @@
+name: Docker Pipeline
+
+on:
+  push:
+    branches:
+      - Jenkins
+
+env:
+  registry: romanfandrich/alien-tetris
+  registryCredential: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Lint Dockerfile with Hadolint
+      run: |
+        docker run --rm -i hadolint/hadolint < Dockerfile || echo "Hadolint found issues with the Dockerfile"
+
+    - name: Build Docker image
+      id: build-image
+      run: |
+        IMAGE_ID=${{ env.registry }}:${{ github.run_number }}
+        docker build -t $IMAGE_ID .
+        echo "::set-output name=image::$IMAGE_ID"
+
+    - name: Push Docker image
+      run: |
+        docker push ${{ steps.build-image.outputs.image }}
+
+    - name: Run Docker container
+      run: |
+        docker run -d --name alien-tetris-test -p 8055:80 ${{ steps.build-image.outputs.image }}
+
+    - name: Test application
+      run: |
+        sleep 10 # wait for the container to be fully started
+        curl http://localhost:8055
+
+    - name: Stop and remove Docker container
+      if: always()
+      run: |
+        docker stop alien-tetris-test
+        docker rm alien-tetris-test
+
+    - name: Remove Docker image
+      if: always()
+      run: |
+        docker rmi ${{ steps.build-image.outputs.image }}
