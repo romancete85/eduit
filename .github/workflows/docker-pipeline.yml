@@ -26,8 +26,17 @@ jobs:
         password: ${{ secrets.DOCKER_PASS }}
 
     - name: Lint Dockerfile with Hadolint
+      id: hadolint
       run: |
-        docker run --rm -i hadolint/hadolint < .github/workflows/dockerfile || echo "Hadolint found issues with the Dockerfile"
+        if docker run --rm -i hadolint/hadolint < .github/workflows/dockerfile; then
+          echo "Hadolint succeeded. No issues found with the Dockerfile."
+          echo "::set-output name=hadolint_result::success"
+        else
+          echo "Hadolint found issues with the Dockerfile."
+          echo "::set-output name=hadolint_result::failure"
+        fi
+
+    #docker run --rm -i hadolint/hadolint < .github/workflows/dockerfile || echo "Hadolint found issues with the Dockerfile"
 
     - name: Set up Docker metadata
       id: meta
