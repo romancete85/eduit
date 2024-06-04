@@ -1,4 +1,4 @@
-name: Docker Pipeline
+name: Docker Pipeline 2
 
 on:
   push:
@@ -59,4 +59,6 @@ jobs:
     - name: Remove Docker image
       if: always()
       run: |
-        docker rmi ${{ steps.build-image.outputs.image }}
+        IMAGE_ID="${{ steps.build-image.outputs.image }}"
+        docker rmi $IMAGE_ID
+      #docker rmi ${{ steps.build-image.outputs.image }}
