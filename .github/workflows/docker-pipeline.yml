@@ -27,7 +27,7 @@ jobs:
 
     - name: Lint Dockerfile with Hadolint
       run: |
-        docker run --rm -i hadolint/hadolint < Dockerfile || echo "Hadolint found issues with the Dockerfile"
+        docker run --rm -i hadolint/hadolint < .github/workflows/dockerfile || echo "Hadolint found issues with the Dockerfile"
 
     - name: Set up Docker metadata
       id: meta
@@ -43,7 +43,7 @@ jobs:
       id: push
       uses: docker/build-push-action@v4
       with:
-        context: .  # Ajusta esto a la ruta de tu contexto de construcción
+        context: .github/workflows  # Ajusta esto a la ruta de tu contexto de construcción
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
