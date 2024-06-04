@@ -67,4 +67,5 @@ jobs:
     - name: Remove Docker image
       if: always()
       run: |
-        docker rmi ${{ steps.push.outputs.image }}
+        docker rmi romanfandrich/alien-tetris
+      #docker rmi ${{ steps.push.outputs.image }}
