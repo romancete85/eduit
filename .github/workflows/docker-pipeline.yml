@@ -67,6 +67,4 @@ jobs:
     - name: Remove Docker image
       if: always()
       run: |
-        IMAGE_ID=$(echo ${{ steps.build_push.outputs.image }} | cut -d' ' -f1)
-        docker rmi $IMAGE_ID
-      #docker rmi ${{ steps.push.outputs.image }}
+        docker rmi ${{ steps.push.outputs.image }}
