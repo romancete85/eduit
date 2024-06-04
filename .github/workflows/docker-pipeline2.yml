@@ -19,7 +19,7 @@ jobs:
     - name: lint dockerfile with hadolint
       uses: hadolint/hadolint-action@v3.1.0
       with:
-        dockerfile: .github/workflows/dockerfile
+        dockerfile: dockerfile
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
