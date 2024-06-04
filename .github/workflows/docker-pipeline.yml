@@ -29,7 +29,7 @@ jobs:
       id: hadolint
       run: |
         if docker run --rm -i hadolint/hadolint < .github/workflows/dockerfile; then
-          echo "Hadolint succeeded. No issues found with the Dockerfile."
+          echo "Hadolint succeeded. No issues found with the Dockerfile!."
           echo "::set-output name=hadolint_result::success"
         else
           echo "Hadolint found issues with the Dockerfile."
