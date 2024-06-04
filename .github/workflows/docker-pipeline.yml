@@ -51,7 +51,7 @@ jobs:
 
     - name: Run Docker container
       run: |
-        docker run -d --name alien-tetris-test -p 8055:80 ${{ steps.build.outputs.image }
+        docker run -d --name alien-tetris-test -p 8055:80 ${{ steps.build.outputs.image }}
       #docker run -d --name alien-tetris-test -p 8055:80 ${{ steps.push.outputs.image }}
 
     - name: Test application
