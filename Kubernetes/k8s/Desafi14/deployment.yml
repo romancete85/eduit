@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alien-tetris-deployment
+  labels:
+    app: alien-tetris
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: alien-tetris
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: alien-tetris
+    spec:
+      containers:
+      - name: alien-tetris
+        image: romanfandrich/alien-tetris:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: alien-tetris-secret
+              key: secret-key
