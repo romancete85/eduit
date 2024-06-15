@@ -4,9 +4,10 @@ metadata:
   name: alien-tetris-service
 spec:
   selector:
-    app: alien-tetris
+    app: alien-tetris # label for the pod
   ports:
     - protocol: TCP
-      port: 80
+      port: 2900
       targetPort: 80
-  type: LoadBalancer
+      name: http
+  type: LoadBalancer 
