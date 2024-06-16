@@ -35,4 +35,4 @@ Este proyecto despliega la aplicación Alien Tetris en un clúster de Kubernetes
 
 ## Enlaces
 - [Repositorio de la Imagen Docker](https://hub.docker.com/r/romanfandrich/alien-tetris)
-- [Repositorio de Código en GitHub](https://github.com/tu-usuario/alien-tetris-k8s)
+- [Repositorio de Código en GitHub](https://github.com/romancete85/eduit/edit/main/Kubernetes/k8s)
