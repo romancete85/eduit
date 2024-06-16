@@ -12,8 +12,8 @@ Este proyecto despliega la aplicación Alien Tetris en un clúster de Kubernetes
 
 1. Clona este repositorio:
     ```bash
-    git clone https://github.com/tu-usuario/alien-tetris-k8s.git
-    cd alien-tetris-k8s
+    git clone https://github.com/romancete85/eduit/blob/main/Kubernetes/k8s/Desafi14
+    cd Desafio14
     ```
 
 2. Aplica los manifiestos:
