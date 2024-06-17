@@ -1,0 +1,8 @@
+replicaCount: 3
+
+image:
+  repository: your-image
+  tag: tag
+
+ingress:
+  host: alien.tetris
