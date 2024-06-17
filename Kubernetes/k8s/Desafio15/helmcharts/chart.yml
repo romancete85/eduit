@@ -1,0 +1,7 @@
+apiVersion: v2
+name: alien-tetris
+description: A Helm chart for deploying Alien Tetris application
+
+version: 0.1.0
+appVersion: "1.0"
+
