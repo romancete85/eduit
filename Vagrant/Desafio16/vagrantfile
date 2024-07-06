@@ -1,0 +1,47 @@
+# Vagrantfile
+
+Vagrant.configure("2") do |config|
+    # Configuración básica
+    config.vm.box = "gusztavvargadr/windows-server" # Reemplaza con la caja que prefieras
+  
+    # Configuración de red
+    config.vm.network "private_network", ip: "10.0.10.201"
+
+    # Configuración de memoria y CPU
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "6048" # Memoria RAM
+      vb.cpus = 4        # Número de CPUs
+      vb.name = "vagrantWS" #nombre VM
+    end
+    
+    # Configuración de HOSTNAME
+    config.vm.hostname = "WSVAGRANT"
+
+
+    # Configuración de SYNCH FILES
+    config.vm.synced_folder "C:/Users/roman/Desktop/DEVOPS/GITHUB/365DEVOPS/Vagrant w/share", "C:/carpeta_compartida"
+
+    # Configuración de acceso RDP con puertos adicionales
+    config.vm.network "forwarded_port", guest: 3389, host: 3389, id: "rdp1"
+    config.vm.network "forwarded_port", guest: 3389, host: 3390, id: "rdp2"
+  
+    # Configuración de provisionamiento
+    config.vm.provision "shell", inline: <<-SHELL
+      # Aquí puedes agregar comandos para la provisión inicial
+      Write-Host "Provisioning Windows Server"
+      # Ejemplo: Instalar características de Windows
+      Install-WindowsFeature -Name Web-Server -IncludeManagementTools
+      # Ejemplo: Crear un usuario administrador
+      New-LocalUser -Name "admin" -Password "admin" -Description "Administrador de Windows" -ErrorAction Stop
+      # Ejemplo: Crear un grupo administrador
+      New-LocalGroup -Name "Administradores" -Description "Grupo de administradores" -ErrorAction Stop
+      # Ejemplo: Agregar el usuario administrador al grupo administradores
+      Add-LocalGroupMember -Group "Administradores" -Member "admin" -ErrorAction Stop
+      # Ejemplo: Configurar el firewall para permitir RDP
+      Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+      # Ejemplo: iNSTALAR -net FRAMEWORK 3.5
+      Install-WindowsFeature -Name NET-Framework-Core -IncludeManagementTools
+    SHELL
+  
+  end
+  
