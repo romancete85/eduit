@@ -105,8 +105,9 @@ Le damos permisos de conexión por RDP
 
  Ejecutamos como administrador:
 
+```powershell
 New-LocalUser -Name "bonustrack" -Description "Cuenta de bonustrack" -NoPassword
-
+```
 Asignar permisos básicos al usuario bonustrack:
 En PowerShell:
 ```powershell
