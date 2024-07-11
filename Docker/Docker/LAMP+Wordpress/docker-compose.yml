@@ -1,0 +1,40 @@
+version: '3'
+services:
+  web:
+    image: php:7.4-apache
+    ports:
+      - "8081:80"   # Puerto personalizado para Apache
+    volumes:
+      - ./html:/var/www/html
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: example
+      WORDPRESS_DB_NAME: wordpress
+  db:
+    image: mariadb
+    ports:
+      - "3306:3306"  # Puerto personalizado para MySQL/MariaDB
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: example
+    volumes:
+      - db_data:/var/lib/mysql
+  wordpress:
+    image: wordpress
+    ports:
+      - "8082:80"  # Puerto personalizado para WordPress
+    volumes:
+      - ./wordpress:/var/www/html
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: example
+      WORDPRESS_DB_NAME: wordpress
+volumes:
+  db_data:
