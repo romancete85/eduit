@@ -1,4 +1,4 @@
-# Desafío 16 - Seguridad en Linux: Server Hacking con LAMP + WordPress
+# Desafío 17 - Seguridad en Linux: Server Hacking con LAMP + WordPress
 
 ## Objetivos
 1. Implementar autenticación y autorización en un entorno LAMP con WordPress.
