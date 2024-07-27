@@ -1,0 +1,4 @@
+all:
+  hosts:
+    instancia_ec2:
+      ansible_host: 
