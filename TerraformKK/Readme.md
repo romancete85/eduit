@@ -163,7 +163,9 @@ By following these guidelines and understanding the fundamental concepts outline
 
 ### Architecture Diagram
 
-![alt text](image.png)
+![alt text](terraformdiagram.png)
+
+
 
 
 ###############################################################################################
@@ -176,6 +178,7 @@ Terraform, a widely used infrastructure as code tool, allows for the automation 
 Terraform state is a JSON file that Terraform generates automatically during the terraform apply command. This file contains vital information about the resources Terraform creates, allowing Terraform to map real-world resources to your configuration and keep track of metadata.
 
 ### Diagram
+![alt text](terraformstate.png)
 
 ## Why is State Important?
 Synchronization: It ensures that Terraform's actions are based on the most current information about your infrastructure, preventing conflicts.
