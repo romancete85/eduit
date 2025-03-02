@@ -215,7 +215,7 @@ terraform {
   }
 }
 ```
-This configuration stores the state in an encrypted form in an S3 bucket and uses a DynamoDB table for state locking.
+### This configuration stores the state in an encrypted form in an S3 bucket and uses a DynamoDB table for state locking.
 
 ## 🔐 State Locking
 State locking is crucial for preventing multiple users from making simultaneous changes to the state, which can lead to conflicts or corruption. Terraform automatically locks the state for all operations that could write state, such as terraform apply or terraform destroy.
