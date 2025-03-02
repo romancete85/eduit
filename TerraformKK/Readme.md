@@ -108,11 +108,12 @@ Precedence: Fourth highest. Overrides variable defaults but is overridden by ter
 Variables can have default values specified within the Terraform configuration.
 
 Example (variables.tf):
-
+```sh
 variable "instance_type" {
   description = "Type of instance to use"
   default     = "t2.micro"
 }
+```
 Precedence: Lowest. Used only if no other value is provided by any of the higher-precedence methods.
 
 Outputs: Extracting Information
@@ -120,10 +121,12 @@ Outputs allow you to extract information from your resources, which can be usefu
 
 Defining Outputs
 Define an output for an AWS instance's public IP:
-
+```sh
 output "public_ip" {
-  value = aws_instance.my_instance.public_ip
+  value = aws_
 }
+  ```
+
 ## Modules: Promoting Reusability
 ### Modules are containers for multiple resources that are used together. They promote reusability and manageability of Terraform configurations.
 
@@ -132,6 +135,7 @@ output "public_ip" {
 
 webserver/main.tf:
 
+```sh
 resource "aws_instance" "web" {
   ami           = var.ami
   instance_type = var.instance_type
@@ -148,6 +152,8 @@ module "webserver_module" {
   ami          = "ami-123456"
   instance_type = "t2.micro"
 }
+```
+
 ## Best Practices for Terraform Configurations
 Organize Resources Logically: Group related resources in the same file or module.
 Use Variables and Outputs Judiciously: Define variables for elements likely to change and outputs for important information.
@@ -180,19 +186,22 @@ Terraform state can be managed locally or remotely, each with its own set of con
 
 ## Local State Management
 By default, Terraform stores state locally in a file named terraform.tfstate. While this is simple and convenient for individual use, it poses challenges for team collaboration and security.
-
+```sh
 terraform {
   backend "local" {
     path = "relative/path/to/terraform.tfstate"
   }
 }
+```
 ## Remote State Management
 For teams and projects requiring collaboration, remote state backends like AWS S3, Azure Blob Storage, or Google Cloud Storage are recommended. Remote backends offer several advantages:
 
 ## Shared Access: Team members can access the state concurrently, allowing for collaborative work on infrastructure.
 Security: Remote backends can be secured with encryption, access controls, and other cloud-provider security features.
 State Locking: Prevents concurrent state operations, reducing the risk of corruption.
+
 Example: Configuring an S3 Backend
+```sh
 terraform {
   backend "s3" {
     bucket         = "my-terraform-state-bucket"
@@ -202,6 +211,7 @@ terraform {
     dynamodb_table = "my-lock-table"
   }
 }
+```
 This configuration stores the state in an encrypted form in an S3 bucket and uses a DynamoDB table for state locking.
 
 ## 🔐 State Locking
